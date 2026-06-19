@@ -1,0 +1,106 @@
+import { team, values, impactStats } from '../../constants/data';
+import PageHeader from '../../components/common/PageHeader';
+
+export default function About() {
+  return (
+    <>
+      <PageHeader title="About Banshri" subtitle="Our story, our values, and the people who make it all possible" />
+
+      {/* Story */}
+      <section className="section">
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '3rem', alignItems: 'center' }} className="mission-grid">
+            <div>
+              <div className="section-tag">📖 Our Story</div>
+              <h2 className="section-title">Born from a Promise</h2>
+              <p style={{ color: 'var(--light)', lineHeight: 1.8, marginBottom: '1rem' }}>
+                In 2018, Dr. Kavita Sharma walked through the drought-stricken villages of North Gujarat and made a promise — that no child's future would be determined by their postcode. Banshri was born that day.
+              </p>
+              <p style={{ color: 'var(--light)', lineHeight: 1.8, marginBottom: '1rem' }}>
+                What began as a small reading circle for 12 children in Patan has grown into a pan-Gujarat movement touching 10,000+ lives through six integrated programs.
+              </p>
+              <p style={{ color: 'var(--light)', lineHeight: 1.8 }}>
+                Named after the sacred flute — the Banshi — which creates harmony from the simplest breath, our organization believes in the transformative power of connection, community, and compassion.
+              </p>
+            </div>
+            <div style={{ background: 'linear-gradient(135deg,rgba(0,91,154,0.06),rgba(0,167,167,0.06))', borderRadius: '30px', padding: '2.5rem', border: '1px solid rgba(0,167,167,0.15)', textAlign: 'center' }}>
+              <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>🪶</div>
+              <h3 style={{ color: 'var(--blue)', marginBottom: '0.5rem', fontSize: '1.4rem' }}>7 Years of Service</h3>
+              <p style={{ color: 'var(--light)', fontSize: '0.9rem', lineHeight: 1.7 }}>From 12 children to 10,000+ lives.<br />From 1 district to 8 districts.<br />From a promise to a movement.</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1.5rem' }}>
+                {[['80G', 'Tax Certified'], ['12(A)', 'Registered'], ['AAA', 'NGO Rating'], ['GuideStar', 'Verified']].map(([val, lbl]) => (
+                  <div key={lbl} style={{ background: 'white', borderRadius: '12px', padding: '1rem', boxShadow: '0 2px 10px rgba(0,91,154,0.08)' }}>
+                    <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--teal)' }}>{val}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--light)' }}>{lbl}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header center">
+            <div className="section-tag" style={{ margin: '0 auto 0.5rem' }}>💎 Core Values</div>
+            <h2 className="section-title">What Guides Us</h2>
+          </div>
+          <div className="cards-grid">
+            {values.map(v => (
+              <div className="value-card" key={v.name}>
+                <span className="value-icon">{v.icon}</span>
+                <h4>{v.name}</h4>
+                <p>{v.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Team */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header center">
+            <div className="section-tag" style={{ margin: '0 auto 0.5rem' }}>👥 Leadership</div>
+            <h2 className="section-title">The Team Behind the Mission</h2>
+          </div>
+          <div className="cards-grid">
+            {team.map(t => (
+              <div className="team-card" key={t.name}>
+                <div className="team-avatar">{t.emo}</div>
+                <div className="team-body">
+                  <h4>{t.name}</h4>
+                  <div className="role">{t.role}</div>
+                  <p>{t.bio}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Impact */}
+      <div className="impact-section">
+        <div className="container">
+          <div className="section-header center" style={{ marginBottom: '2.5rem' }}>
+            <h2 className="section-title" style={{ color: 'white' }}>2024–25 Annual Highlights</h2>
+          </div>
+          <div className="impact-grid">
+            {impactStats.map(i => (
+              <div className="impact-card" key={i.l}>
+                <div className="impact-icon">{i.icon}</div>
+                <div className="impact-num">{i.n}</div>
+                <div className="impact-lbl">{i.l}</div>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <button className="btn-outline-white">⬇️ Download Annual Report</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}

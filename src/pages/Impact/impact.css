@@ -1,0 +1,423 @@
+/* ============================================================
+   Impact Page CSS
+   ============================================================ */
+
+/* ── Stats Grid ──────────────────────────────────────────── */
+.impact-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.impact-stat-card {
+  background: white;
+  border-radius: 20px;
+  padding: 1.6rem 1.25rem;
+  box-shadow: 0 4px 20px rgba(0,91,154,0.08);
+  border: 1px solid rgba(0,91,154,0.06);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.impact-stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 40px rgba(0,91,154,0.14);
+}
+
+.impact-stat-img-wrap {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 0.9rem;
+  border: 3px solid;
+}
+.impact-stat-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s;
+}
+.impact-stat-card:hover .impact-stat-img { transform: scale(1.08); }
+
+.impact-stat-n {
+  font-family: var(--font-num);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.impact-stat-l {
+  font-weight: 700;
+  color: var(--dark);
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+.impact-stat-desc {
+  font-size: 0.74rem;
+  color: var(--light);
+  line-height: 1.5;
+}
+
+/* ── Program Impact List ─────────────────────────────────── */
+.program-impact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.pi-row {
+  display: grid;
+  grid-template-columns: 220px 1fr auto;
+  gap: 1.75rem;
+  align-items: center;
+  background: white;
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,91,154,0.07);
+  border: 1px solid rgba(0,91,154,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.pi-row:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 36px rgba(0,91,154,0.12);
+}
+
+.pi-img-wrap {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  height: 130px;
+  flex-shrink: 0;
+}
+.pi-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.pi-row:hover .pi-img { transform: scale(1.06); }
+
+.pi-img-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.3rem 0.5rem;
+}
+
+.pi-content { flex: 1; }
+.pi-name {
+  font-size: 1.05rem;
+  font-weight: 800;
+  margin-bottom: 0.35rem;
+}
+.pi-desc {
+  font-size: 0.82rem;
+  color: var(--light);
+  line-height: 1.6;
+  margin-bottom: 0.85rem;
+}
+
+.pi-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+.pi-metric {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  border-left-width: 3px;
+  border-left-style: solid;
+}
+.pi-check { font-size: 0.85rem; font-weight: 800; }
+.pi-metric-text { color: var(--dark); font-weight: 600; }
+
+.pi-learn-btn {
+  display: inline-block;
+  padding: 0.55rem 1.2rem;
+  border-radius: 10px;
+  border: 2px solid;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+.pi-learn-btn:hover {
+  background: currentColor;
+  filter: invert(1) brightness(1.5);
+}
+
+/* ── Milestones ─────────────────────────────────────────── */
+.milestones-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+
+.milestone-card {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,91,154,0.07);
+  border: 1px solid rgba(0,91,154,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.milestone-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 36px rgba(0,91,154,0.14);
+}
+
+.ms-img-wrap {
+  position: relative;
+  height: 160px;
+  overflow: hidden;
+}
+.ms-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+.milestone-card:hover .ms-img { transform: scale(1.05); }
+
+.ms-year-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: linear-gradient(135deg, var(--blue), var(--teal));
+  color: white;
+  font-size: 0.78rem;
+  font-weight: 800;
+  padding: 0.2rem 0.65rem;
+  border-radius: 20px;
+}
+
+.ms-body { padding: 1.1rem 1.25rem 1.35rem; }
+.ms-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--dark);
+  margin-bottom: 0.4rem;
+}
+.ms-desc {
+  font-size: 0.8rem;
+  color: var(--light);
+  line-height: 1.65;
+}
+
+/* ── SDG Grid ────────────────────────────────────────────── */
+.sdg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.3rem;
+}
+
+.sdg-card {
+  background: white;
+  border-radius: 18px;
+  padding: 1.4rem 1.25rem;
+  box-shadow: 0 4px 18px rgba(0,91,154,0.07);
+  border: 1px solid rgba(0,91,154,0.06);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.sdg-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,91,154,0.12);
+}
+
+.sdg-img-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2.5px solid;
+}
+.sdg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sdg-badge {
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 0.56rem;
+  font-weight: 800;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.sdg-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+.sdg-match {
+  font-size: 0.78rem;
+  color: var(--light);
+  line-height: 1.6;
+}
+
+/* ── Testimonials Band ───────────────────────────────────── */
+.impact-testimonials-band {
+  background: linear-gradient(135deg, var(--dark-blue), #003366, var(--blue));
+  padding: 5rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.impact-test-bg {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 40%, rgba(244,197,66,0.1) 0%, transparent 40%),
+    radial-gradient(circle at 85% 60%, rgba(0,167,167,0.14) 0%, transparent 40%);
+}
+
+.impact-test-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.impact-test-card {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 20px;
+  padding: 1.75rem;
+  backdrop-filter: blur(10px);
+  transition: background 0.2s, transform 0.2s;
+}
+.impact-test-card:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-4px);
+}
+
+.impact-test-quote {
+  color: rgba(255,255,255,0.88);
+  font-size: 0.87rem;
+  line-height: 1.75;
+  font-style: italic;
+  border-left: 3px solid var(--gold);
+  padding-left: 0.9rem;
+  margin-bottom: 1.25rem;
+}
+
+.impact-test-author {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+}
+.impact-test-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(244,197,66,0.4);
+  flex-shrink: 0;
+}
+.impact-test-name {
+  color: white;
+  font-weight: 700;
+  font-size: 0.88rem;
+}
+.impact-test-role {
+  color: rgba(255,255,255,0.6);
+  font-size: 0.74rem;
+  margin-top: 0.1rem;
+}
+.impact-test-prog {
+  display: inline-block;
+  background: rgba(244,197,66,0.18);
+  color: var(--gold);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 0.1rem 0.5rem;
+  border-radius: 20px;
+  margin-top: 0.3rem;
+}
+
+/* ── CTA Block ───────────────────────────────────────────── */
+.impact-cta-block {
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 12px 50px rgba(0,91,154,0.18);
+}
+.impact-cta-img-wrap {
+  position: relative;
+  height: 280px;
+}
+.impact-cta-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.impact-cta-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,20,60,0.82), rgba(0,91,154,0.65));
+}
+.impact-cta-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+.impact-cta-text h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  color: white;
+  margin-bottom: 0.7rem;
+}
+.impact-cta-text p {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+.impact-cta-btns {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .impact-stats-grid { grid-template-columns: repeat(4, 1fr); }
+  .milestones-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 900px) {
+  .impact-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .pi-row { grid-template-columns: 1fr; }
+  .pi-img-wrap { height: 180px; }
+  .pi-learn-btn { width: 100%; text-align: center; }
+  .milestones-grid { grid-template-columns: repeat(2, 1fr); }
+  .sdg-grid { grid-template-columns: repeat(2, 1fr); }
+  .impact-test-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .impact-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .milestones-grid { grid-template-columns: 1fr; }
+  .sdg-grid { grid-template-columns: 1fr; }
+}

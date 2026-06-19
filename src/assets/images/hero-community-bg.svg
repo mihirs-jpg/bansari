@@ -1,0 +1,118 @@
+<svg viewBox="0 0 1600 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="skyFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#001F3F" stop-opacity="0"/>
+      <stop offset="60%" stop-color="#001F3F" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#001F3F" stop-opacity="0.55"/>
+    </linearGradient>
+    <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#F4C542" stop-opacity="0.55"/>
+      <stop offset="55%" stop-color="#F4C542" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#F4C542" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hillFar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#007B8A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#005B9A" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="hillNear" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#003366" stop-opacity="0.55"/>
+      <stop offset="100%" stop-color="#001F3F" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="figureGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00A7A7" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#005B9A" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sun / hope glow, upper right -->
+  <circle cx="1180" cy="190" r="230" fill="url(#sunGlow)"/>
+  <circle cx="1180" cy="190" r="58" fill="#F4C542" opacity="0.18"/>
+
+  <!-- Radiating sun rays -->
+  <g stroke="#F4C542" stroke-opacity="0.14" stroke-width="3">
+    <line x1="1180" y1="190" x2="1180" y2="40"/>
+    <line x1="1180" y1="190" x2="1300" y2="80"/>
+    <line x1="1180" y1="190" x2="1340" y2="190"/>
+    <line x1="1180" y1="190" x2="1300" y2="300"/>
+    <line x1="1180" y1="190" x2="1060" y2="300"/>
+    <line x1="1180" y1="190" x2="1020" y2="190"/>
+    <line x1="1180" y1="190" x2="1060" y2="80"/>
+  </g>
+
+  <!-- Far rolling hills -->
+  <path d="M0,560 Q200,500 420,540 T800,520 T1200,560 T1600,520 L1600,900 L0,900 Z" fill="url(#hillFar)"/>
+
+  <!-- Tree motifs scattered on far hills -->
+  <g opacity="0.5" fill="#00A7A7">
+    <circle cx="180" cy="525" r="26"/>
+    <rect x="176" y="540" width="8" height="22" fill="#003366"/>
+    <circle cx="1460" cy="530" r="22"/>
+    <rect x="1456" y="544" width="8" height="20" fill="#003366"/>
+    <circle cx="1510" cy="540" r="16"/>
+    <rect x="1507" y="550" width="6" height="16" fill="#003366"/>
+  </g>
+
+  <!-- Near hills -->
+  <path d="M0,650 Q300,590 600,630 T1100,610 T1600,650 L1600,900 L0,900 Z" fill="url(#hillNear)"/>
+
+  <!-- Simple village hut silhouettes -->
+  <g fill="#001F3F" opacity="0.55">
+    <path d="M120,650 L120,610 L170,575 L220,610 L220,650 Z"/>
+    <rect x="135" y="650" width="70" height="6" opacity="0.3"/>
+    <path d="M1340,640 L1340,600 L1395,562 L1450,600 L1450,640 Z"/>
+    <rect x="1355" y="640" width="80" height="6" opacity="0.3"/>
+  </g>
+
+  <!-- Tree near huts -->
+  <g opacity="0.6" fill="#00B894">
+    <circle cx="260" cy="615" r="34"/>
+    <rect x="254" y="640" width="10" height="28" fill="#003366"/>
+  </g>
+
+  <!-- Community circle of people — joined hands motif, center-low in hero -->
+  <g transform="translate(800,760)">
+    <!-- connecting arc suggesting unity -->
+    <path d="M-260,-40 Q0,-150 260,-40" fill="none" stroke="#F4C542" stroke-opacity="0.3" stroke-width="3" stroke-dasharray="2 14" stroke-linecap="round"/>
+
+    <!-- figure 1 -->
+    <g transform="translate(-260,0)" fill="url(#figureGrad)">
+      <circle cx="0" cy="-86" r="20"/>
+      <path d="M-24,-58 Q0,-72 24,-58 L30,40 Q0,56 -30,40 Z"/>
+    </g>
+    <!-- figure 2 (child, smaller) -->
+    <g transform="translate(-150,18)" fill="url(#figureGrad)" opacity="0.92">
+      <circle cx="0" cy="-62" r="15"/>
+      <path d="M-18,-42 Q0,-52 18,-42 L22,30 Q0,42 -22,30 Z"/>
+    </g>
+    <!-- figure 3 -->
+    <g transform="translate(-30,-6)" fill="url(#figureGrad)">
+      <circle cx="0" cy="-94" r="22"/>
+      <path d="M-26,-64 Q0,-80 26,-64 L33,44 Q0,62 -33,44 Z"/>
+    </g>
+    <!-- figure 4, arms raised (celebration / hope) -->
+    <g transform="translate(95,2)" fill="url(#figureGrad)">
+      <circle cx="0" cy="-90" r="21"/>
+      <path d="M-25,-62 Q-40,-100 -34,-110" fill="none" stroke="url(#figureGrad)" stroke-width="10" stroke-linecap="round"/>
+      <path d="M25,-62 Q40,-100 34,-110" fill="none" stroke="url(#figureGrad)" stroke-width="10" stroke-linecap="round"/>
+      <path d="M-25,-62 Q0,-76 25,-62 L31,42 Q0,58 -31,42 Z"/>
+    </g>
+    <!-- figure 5 (child) -->
+    <g transform="translate(205,20)" fill="url(#figureGrad)" opacity="0.92">
+      <circle cx="0" cy="-60" r="14"/>
+      <path d="M-17,-40 Q0,-50 17,-40 L20,28 Q0,40 -20,28 Z"/>
+    </g>
+    <!-- figure 6 -->
+    <g transform="translate(280,-2)" fill="url(#figureGrad)">
+      <circle cx="0" cy="-88" r="20"/>
+      <path d="M-23,-60 Q0,-74 23,-60 L29,42 Q0,58 -29,42 Z"/>
+    </g>
+  </g>
+
+  <!-- Feather / hope symbol motif, faint, upper-left -->
+  <g transform="translate(220,150) rotate(18)" opacity="0.10" fill="#F4C542">
+    <path d="M0,0 C30,10 45,60 30,140 C20,150 0,150 -10,135 C-25,60 -20,10 0,0 Z"/>
+  </g>
+
+  <!-- Soft top-to-bottom darkening so content text stays readable -->
+  <rect x="0" y="0" width="1600" height="900" fill="url(#skyFade)"/>
+</svg>

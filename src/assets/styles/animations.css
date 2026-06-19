@@ -1,0 +1,138 @@
+/* ==========================================================================
+   animations.css — Reusable motion & 3D-effect system
+   Apple-style scroll reveals, tilt cards, parallax, magnetic buttons.
+   Import once globally; use these utility classes on any page.
+   ========================================================================== */
+
+/* ---------- Scroll Reveal base ---------- */
+.reveal {
+  opacity: 0;
+  transition-property: opacity, transform, filter;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.reveal.is-visible { opacity: 1; }
+
+.reveal-up { transform: translate3d(0, 56px, 0); filter: blur(6px); }
+.reveal-up.is-visible { transform: translate3d(0, 0, 0); filter: blur(0); }
+
+.reveal-down { transform: translate3d(0, -56px, 0); filter: blur(6px); }
+.reveal-down.is-visible { transform: translate3d(0, 0, 0); filter: blur(0); }
+
+.reveal-left { transform: translate3d(-64px, 0, 0); filter: blur(6px); }
+.reveal-left.is-visible { transform: translate3d(0, 0, 0); filter: blur(0); }
+
+.reveal-right { transform: translate3d(64px, 0, 0); filter: blur(6px); }
+.reveal-right.is-visible { transform: translate3d(0, 0, 0); filter: blur(0); }
+
+.reveal-scale { transform: scale3d(0.82, 0.82, 1); filter: blur(6px); }
+.reveal-scale.is-visible { transform: scale3d(1, 1, 1); filter: blur(0); }
+
+.reveal-fade { transform: none; filter: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-up, .reveal-down, .reveal-left, .reveal-right, .reveal-scale {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ---------- 3D Tilt Card ---------- */
+.tilt-card {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  --glare-x: 50%;
+  --glare-y: 50%;
+  --glare-opacity: 0;
+}
+.tilt-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at var(--glare-x) var(--glare-y),
+    rgba(255, 255, 255, 0.55) 0%,
+    rgba(255, 255, 255, 0.12) 35%,
+    transparent 65%
+  );
+  opacity: var(--glare-opacity);
+  transition: opacity 0.25s ease;
+  mix-blend-mode: overlay;
+  z-index: 3;
+}
+.tilt-card-inner {
+  transform: translateZ(0);
+  transform-style: preserve-3d;
+}
+
+/* Depth-layered children inside a tilt card (parallax-within-card) */
+.tilt-layer-1 { transform: translateZ(20px); }
+.tilt-layer-2 { transform: translateZ(40px); }
+.tilt-layer-3 { transform: translateZ(60px); }
+
+/* ---------- Floating / orbiting elements ---------- */
+@keyframes floatY {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -22px, 0) rotate(3deg); }
+}
+.float-anim { animation: floatY 6s ease-in-out infinite; }
+
+@keyframes floatYSlow {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(0, -34px, 0) rotate(-4deg); }
+}
+.float-anim-slow { animation: floatYSlow 9s ease-in-out infinite; }
+
+@keyframes spin3d {
+  from { transform: rotateY(0deg); }
+  to { transform: rotateY(360deg); }
+}
+.spin3d-anim { animation: spin3d 14s linear infinite; transform-style: preserve-3d; }
+
+/* ---------- Magnetic Button ---------- */
+.magnetic-btn {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+/* ---------- Number count-up ---------- */
+.count-num { display: inline-block; }
+
+/* ---------- Gradient shimmer text ---------- */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer-text {
+  background: linear-gradient(110deg, currentColor 35%, rgba(244, 197, 66, 0.55) 50%, currentColor 65%);
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 4.5s linear infinite;
+}
+
+/* ---------- Animated gradient mesh background ---------- */
+@keyframes meshDrift {
+  0% { transform: translate3d(0,0,0) scale(1); }
+  50% { transform: translate3d(-2%, 2%, 0) scale(1.08); }
+  100% { transform: translate3d(0,0,0) scale(1); }
+}
+.mesh-drift { animation: meshDrift 18s ease-in-out infinite; }
+
+/* ---------- Staggered child reveal helper ---------- */
+.stagger-children > * {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0);
+  animation: staggerIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes staggerIn {
+  to { opacity: 1; transform: translate3d(0,0,0); }
+}
+
+/* ---------- Smooth global scroll ---------- */
+html { scroll-behavior: smooth; }

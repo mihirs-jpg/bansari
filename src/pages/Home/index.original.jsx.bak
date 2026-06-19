@@ -1,0 +1,191 @@
+import { useNavigate } from 'react-router-dom';
+import { causes, programs, events, testimonials, heroStats } from '../../constants/data';
+import './Home.css';
+
+export default function Home() {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      {/* Hero */}
+      <section className="hero">
+        <div className="hero-bg-pattern"></div>
+        <div className="feather-float">🪶</div>
+        <div className="feather-float">🪶</div>
+        <div className="feather-float">🪶</div>
+        <div className="hero-content fade-in">
+          <div className="hero-badge">🪶 Est. 2018 · Gujarat, India</div>
+          <h1>Together We Build a<br /><span>Better Tomorrow</span></h1>
+          <p>Banshri stands for hope, dignity, and opportunity — transforming lives through education, healthcare, women's empowerment, and community development across rural India.</p>
+          <div className="hero-btns">
+            <button className="btn-primary" onClick={() => navigate('/donate')}>❤️ Donate Now</button>
+            <button className="btn-secondary" onClick={() => navigate('/volunteer')}>🤝 Become a Volunteer</button>
+          </div>
+          <div className="hero-stats">
+            {heroStats.map(s => (
+              <div className="hero-stat" key={s.lbl}>
+                <div className="num">{s.num}</div>
+                <div className="lbl">{s.lbl}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Causes */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header center">
+            <div className="section-tag" style={{ margin: '0 auto 0.5rem' }}>🌟 Our Focus</div>
+            <h2 className="section-title">What We Stand For</h2>
+            <p className="section-sub">Six pillars of change guiding every decision and program we run</p>
+          </div>
+          <div className="causes-grid">
+            {causes.map(c => (
+              <div className="cause-card" key={c.name}>
+                <span className="cause-icon">{c.icon}</span>
+                <h4>{c.name}</h4>
+                <p>{c.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Programs */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header">
+            <div className="section-tag">🎯 Programs</div>
+            <h2 className="section-title">Our Six Programs</h2>
+            <p className="section-sub">Integrated initiatives creating lasting change across Gujarat's most underserved communities</p>
+          </div>
+          <div className="cards-grid">
+            {programs.slice(0, 3).map(p => (
+              <div className="card" key={p.name}>
+                <div className="card-img-placeholder" style={{ background: p.bg }}>{p.icon}</div>
+                <div className="card-body">
+                  <div className="card-tag">{p.cat}</div>
+                  <h3>{p.name}</h3>
+                  <p>{p.desc}</p>
+                  <div className="card-stats">
+                    <div className="card-stat"><div className="n">{p.impact1}</div><div className="l">{p.l1}</div></div>
+                    <div className="card-stat"><div className="n">{p.impact2}</div><div className="l">{p.l2}</div></div>
+                  </div>
+                  <button className="btn-sm" onClick={() => navigate('/programs')}>Learn More →</button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <button className="btn-primary" onClick={() => navigate('/programs')}>View All Programs →</button>
+          </div>
+        </div>
+      </section>
+
+      {/* Impact */}
+      <div className="impact-section">
+        <div className="container">
+          <div className="section-header center" style={{ marginBottom: '2.5rem' }}>
+            <h2 className="section-title" style={{ color: 'white' }}>Our Impact in Numbers</h2>
+          </div>
+          <div className="impact-grid">
+            {[
+              { icon: '📚', n: '10,000+', l: 'Lives Impacted' },
+              { icon: '👩', n: '1,800', l: 'Women trained' },
+              { icon: '🏥', n: '6,500', l: 'Health consults' },
+              { icon: '🌳', n: '50K+', l: 'Trees planted' },
+              { icon: '🏘️', n: '100+', l: 'Villages Reached' },
+            ].map(i => (
+              <div className="impact-card" key={i.l}>
+                <div className="impact-icon">{i.icon}</div>
+                <div className="impact-num">{i.n}</div>
+                <div className="impact-lbl">{i.l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Events */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header">
+            <div className="section-tag">📅 Upcoming</div>
+            <h2 className="section-title">Events & Activities</h2>
+            <p className="section-sub">Join us — every hand makes a difference</p>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {events.map(e => (
+              <div className="event-card" key={e.name}>
+                <div className="event-date">
+                  <div className="day">{e.day}</div>
+                  <div className="month">{e.month}</div>
+                </div>
+                <div className="event-body">
+                  <h4>{e.name}</h4>
+                  <p>{e.desc}</p>
+                  <div className="event-meta">
+                    <span>📍 {e.loc}</span>
+                    <span>🏷️ {e.type}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+            <button className="btn-sm" onClick={() => navigate('/events')} style={{ fontSize: '0.88rem', padding: '0.6rem 1.5rem' }}>View All Events →</button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="section">
+        <div className="container">
+          <div className="section-header center">
+            <div className="section-tag" style={{ margin: '0 auto 0.5rem' }}>💬 Stories</div>
+            <h2 className="section-title">Voices of Change</h2>
+          </div>
+          <div className="cards-grid">
+            {testimonials.map(t => (
+              <div className="testimonial-card" key={t.author}>
+                <p>{t.text}</p>
+                <div className="testimonial-author">
+                  <div className="author-avatar">{t.emo}</div>
+                  <div>
+                    <div className="author-name">{t.author}</div>
+                    <div className="author-role">{t.role}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Donate Banner */}
+      <div className="donate-banner">
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <h2>Ready to Make a Difference?</h2>
+          <p>Every rupee you donate creates ripples of hope across Gujarat's most underserved communities.</p>
+          <button className="btn-primary" onClick={() => navigate('/donate')}>💛 Donate Now</button>
+        </div>
+      </div>
+
+      {/* Partners */}
+      <section className="section section-alt">
+        <div className="container">
+          <div className="section-header center">
+            <div className="section-tag" style={{ margin: '0 auto 0.5rem' }}>🤝 Partners</div>
+            <h2 className="section-title">Trusted By</h2>
+          </div>
+          <div className="partners-strip">
+            {['UNICEF India', 'Govt. of Gujarat', 'NABARD', 'Tata Trusts', 'Azim Premji Foundation', 'GuideStar India'].map(p => (
+              <div className="partner-logo" key={p}>{p}</div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}

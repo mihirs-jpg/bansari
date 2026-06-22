@@ -58,7 +58,7 @@ function TiltCard({ children, className = '', max = 8, scale = 1.015, style = {}
   );
 }
 
-/* ── CAUSES: Scroll-driven spotlight reveal with circular transition + full modal ── */
+/* ── CAUSES: 3D immersive scroll card grid ── */
 const CAUSE_COLORS = ['#005b9a', '#00a7a7', '#00b894', '#f4c542', '#a855f7', '#ef4444'];
 
 /* Full-screen modal when card is clicked */
@@ -277,253 +277,227 @@ function CauseModal({ cause, color, index, total, onClose, onPrev, onNext }) {
   );
 }
 
-function CauseSpotlightSection({ causes }) {
-  const sectionRef = useRef(null);
-  const TOTAL = causes.length;
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  });
-  const smooth = useSpring(scrollYProgress, { stiffness: 60, damping: 20, restDelta: 0.001 });
 
-  const [activeIdx, setActiveIdx] = useState(0);
-  const [modalIdx, setModalIdx] = useState(null); // null = closed
-  const [prevIdx, setPrevIdx] = useState(null);   // track last card for circular exit direction
-  const manualOverride = useRef(false);
-  const manualTimer = useRef(null);
+/* ── 3D Focus Card ── */
+function FocusCard3D({ cause, index, color, onClick }) {
+  const cardRef = useRef(null);
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const [hovered, setHovered] = useState(false);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
 
-  useEffect(() => smooth.on('change', (v) => {
-    if (manualOverride.current) return;
-    const idx = Math.min(TOTAL - 1, Math.max(0, Math.floor(v * TOTAL)));
-    setActiveIdx(prev => { if (prev !== idx) setPrevIdx(prev); return idx; });
-  }), [smooth, TOTAL]);
-
-  const handlePillClick = (i) => {
-    setPrevIdx(activeIdx);
-    setActiveIdx(i);
-    manualOverride.current = true;
-    clearTimeout(manualTimer.current);
-    const el = sectionRef.current;
-    if (el) {
-      const sectionTop = el.getBoundingClientRect().top + window.scrollY;
-      const sectionH = el.offsetHeight;
-      const targetScroll = sectionTop + (i / TOTAL) * sectionH + 2;
-      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-    }
-    manualTimer.current = setTimeout(() => { manualOverride.current = false; }, 900);
+  const handleMouseMove = (e) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const cx = (e.clientX - rect.left) / rect.width - 0.5;
+    const cy = (e.clientY - rect.top) / rect.height - 0.5;
+    setTilt({ x: cy * -14, y: cx * 14 });
   };
+  const handleMouseLeave = () => { setTilt({ x: 0, y: 0 }); setHovered(false); };
 
-  const handlePrev = () => handlePillClick(Math.max(0, activeIdx - 1));
-  const handleNext = () => handlePillClick(Math.min(TOTAL - 1, activeIdx + 1));
+  const staggerDelay = index * 0.11;
+
+  return (
+    <motion.div
+      ref={ref}
+      className="fc3d-wrapper"
+      initial={{ opacity: 0, y: 60, rotateX: 25, scale: 0.88 }}
+      animate={inView ? { opacity: 1, y: 0, rotateX: 0, scale: 1 } : {}}
+      transition={{ duration: 0.7, delay: staggerDelay, ease: [0.16, 1, 0.3, 1] }}
+      style={{ '--card-color': color }}
+    >
+      <motion.div
+        ref={cardRef}
+        className="fc3d-card"
+        onMouseMove={handleMouseMove}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={handleMouseLeave}
+        onClick={onClick}
+        animate={{
+          rotateX: tilt.x,
+          rotateY: tilt.y,
+          scale: hovered ? 1.04 : 1,
+        }}
+        transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        {/* Floating orb glow */}
+        <motion.div
+          className="fc3d-orb"
+          animate={hovered ? { opacity: 1, scale: 1.3 } : { opacity: 0.35, scale: 1 }}
+          transition={{ duration: 0.4 }}
+          style={{ background: `radial-gradient(circle, ${color}55 0%, transparent 70%)` }}
+        />
+
+        {/* Top: full-bleed image header */}
+        <div
+          className="fc3d-header fc3d-header-img"
+          style={{
+            backgroundImage: cause.img ? `url(${cause.img})` : `linear-gradient(135deg, ${color}ee 0%, ${color}88 100%)`,
+          }}
+        >
+          {/* Bottom fade into card body */}
+          <div className="fc3d-img-fade" />
+          {/* Top-left colour tint so number is readable */}
+          <div className="fc3d-img-tint" style={{ background: `linear-gradient(160deg, ${color}66 0%, transparent 55%)` }} />
+          <div className="fc3d-num">{String(index + 1).padStart(2, '0')}</div>
+          <motion.div
+            className="fc3d-shimmer"
+            animate={hovered ? { x: ['-100%', '200%'], opacity: [0, 0.45, 0] } : { x: '-100%', opacity: 0 }}
+            transition={{ duration: 0.65, ease: 'easeInOut' }}
+          />
+        </div>
+
+        {/* Bottom: content */}
+        <div className="fc3d-body">
+          <motion.h3
+            className="fc3d-name"
+            animate={hovered ? { color: color } : { color: '#001f3f' }}
+            transition={{ duration: 0.25 }}
+          >
+            {cause.name}
+          </motion.h3>
+          <motion.div
+            className="fc3d-divider"
+            animate={hovered ? { scaleX: 1.5 } : { scaleX: 1 }}
+            style={{ background: color, transformOrigin: 'left' }}
+            transition={{ duration: 0.3 }}
+          />
+          <p className="fc3d-desc">{cause.desc}</p>
+          <motion.div
+            className="fc3d-cta"
+            animate={hovered ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}
+            transition={{ duration: 0.25 }}
+          >
+            <span>Learn more</span>
+            <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </motion.div>
+        </div>
+
+        {/* Bottom edge reveal */}
+        <motion.div
+          className="fc3d-edge"
+          style={{ background: color }}
+          animate={hovered ? { scaleX: 1 } : { scaleX: 0 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        />
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function AmbientParticle({ color, style }) {
+  return (
+    <motion.div
+      className="fc3d-particle"
+      style={{ ...style, background: color, position: 'absolute', borderRadius: '50%', pointerEvents: 'none' }}
+      animate={{ y: [0, -28, 0], opacity: [0.15, 0.45, 0.15], scale: [1, 1.25, 1] }}
+      transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: style.delay || 0 }}
+    />
+  );
+}
+
+function CauseSpotlightSection({ causes }) {
+  const TOTAL = causes.length;
+  const [modalIdx, setModalIdx] = useState(null);
+  const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { once: false, margin: '-80px' });
+
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const bgY = useTransform(scrollYProgress, [0, 1], ['0%', '-14%']);
+  const titleY = useTransform(scrollYProgress, [0, 0.5], ['0px', '-24px']);
 
   const openModal = (i) => setModalIdx(i);
   const closeModal = () => setModalIdx(null);
   const modalPrev = () => setModalIdx(p => Math.max(0, p - 1));
   const modalNext = () => setModalIdx(p => Math.min(TOTAL - 1, p + 1));
 
-  const bgColor = useTransform(
-    smooth,
-    causes.map((_, i) => i / Math.max(1, TOTAL - 1)),
-    causes.map((_, i) => CAUSE_COLORS[i % CAUSE_COLORS.length] + '18')
-  );
-  const beamAngle = useTransform(smooth, [0, 1], ['-25deg', '25deg']);
-  const beamX = useTransform(smooth, [0, 1], ['10%', '90%']);
-  const color = CAUSE_COLORS[activeIdx % CAUSE_COLORS.length];
-
-  // Determine if new card arrives from right (next) or left (prev)
-  const comingFromRight = prevIdx === null || activeIdx > prevIdx;
+  const particles = [
+    { color: '#005b9a', style: { width: 12, height: 12, top: '18%', left: '8%', delay: 0 } },
+    { color: '#00b894', style: { width: 8, height: 8, top: '62%', left: '5%', delay: 1.2 } },
+    { color: '#a855f7', style: { width: 16, height: 16, top: '35%', right: '6%', delay: 0.5 } },
+    { color: '#f4c542', style: { width: 10, height: 10, top: '75%', right: '10%', delay: 2 } },
+    { color: '#00a7a7', style: { width: 7, height: 7, top: '10%', left: '45%', delay: 0.8 } },
+    { color: '#ef4444', style: { width: 9, height: 9, top: '88%', left: '30%', delay: 1.7 } },
+  ];
 
   return (
     <>
-      <section ref={sectionRef} className="spotlight-section">
-        <div className="spotlight-sticky">
-          <motion.div className="spotlight-ambient" style={{ background: bgColor }} />
-          <motion.div className="spotlight-beam" style={{ left: beamX, rotate: beamAngle }} />
+      <section ref={sectionRef} className="fc3d-section">
+        <motion.div className="fc3d-bg-mesh" style={{ y: bgY }} />
+        {particles.map((p, i) => <AmbientParticle key={i} {...p} />)}
 
-          <div className="spotlight-header">
-            <motion.div className="spotlight-eyebrow" initial={{ opacity: 0, y: -16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+        <div className="fc3d-inner">
+          <motion.div className="fc3d-header-block" style={{ y: titleY }}>
+            <motion.div
+              className="fc3d-eyebrow"
+              initial={{ opacity: 0, y: -20, scale: 0.9 }}
+              animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            >
               🌟 Our Focus
             </motion.div>
-            <motion.h2 className="spotlight-title" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}>
-              What We Stand For
+            <motion.h2
+              className="fc3d-title"
+              initial={{ opacity: 0, y: 30 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            >
+              What We <span className="fc3d-title-accent">Stand For</span>
             </motion.h2>
+            <motion.p
+              className="fc3d-subtitle"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.22 }}
+            >
+              Six pillars guiding every decision, every program, every life we touch.
+            </motion.p>
+            <motion.div
+              className="fc3d-title-line"
+              initial={{ scaleX: 0 }}
+              animate={inView ? { scaleX: 1 } : {}}
+              transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            />
+          </motion.div>
+
+          <div className="fc3d-grid">
+            {causes.map((c, i) => (
+              <FocusCard3D
+                key={c.name}
+                cause={c}
+                index={i}
+                color={CAUSE_COLORS[i % CAUSE_COLORS.length]}
+                onClick={() => openModal(i)}
+              />
+            ))}
           </div>
 
-          <div className="spotlight-stage">
-            {/* Pill nav */}
-            <div className="spotlight-nav">
-              {causes.map((c, i) => (
-                <motion.button
-                  key={c.name}
-                  className={`spotlight-nav-pill ${i === activeIdx ? 'active' : ''}`}
-                  style={{ '--pill-color': CAUSE_COLORS[i % CAUSE_COLORS.length] }}
-                  onClick={() => handlePillClick(i)}
-                  animate={{ x: i === activeIdx ? 10 : 0, opacity: i === activeIdx ? 1 : 0.5, scale: i === activeIdx ? 1.03 : 1 }}
-                  whileHover={{ opacity: 1, x: 4, scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 24 }}
-                >
-                  {i === activeIdx && (
-                    <motion.span className="pill-accent-bar" layoutId="pill-bar" style={{ background: CAUSE_COLORS[i % CAUSE_COLORS.length] }} />
-                  )}
-                  <span className="pill-icon">{c.icon}</span>
-                  <span className="pill-name">{c.name}</span>
-                  {i === activeIdx && (
-                    <motion.span className="pill-dot" layoutId="pill-dot" style={{ background: CAUSE_COLORS[i % CAUSE_COLORS.length] }} />
-                  )}
-                </motion.button>
+          <motion.div
+            className="fc3d-bottom-cta"
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <span className="fc3d-cta-text">Click any card to dive deeper</span>
+            <div className="fc3d-cta-dots">
+              {CAUSE_COLORS.map((c, i) => (
+                <motion.div
+                  key={i}
+                  className="fc3d-cta-dot"
+                  style={{ background: c }}
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 1.2, delay: i * 0.15, repeat: Infinity, ease: 'easeInOut' }}
+                />
               ))}
-
-              <div className="spotlight-arrows">
-                <motion.button className="sarrow-btn" onClick={handlePrev} disabled={activeIdx === 0} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.92 }} style={{ '--arrow-color': color }}>
-                  <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                </motion.button>
-                <span className="sarrow-count" style={{ color }}>{String(activeIdx + 1).padStart(2, '0')} / {String(TOTAL).padStart(2, '0')}</span>
-                <motion.button className="sarrow-btn" onClick={handleNext} disabled={activeIdx === TOTAL - 1} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.92 }} style={{ '--arrow-color': color }}>
-                  <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                </motion.button>
-              </div>
             </div>
-
-            {/* Card area with circular clip-path reveal */}
-            <div className="spotlight-card-area">
-              <AnimatePresence mode="wait" custom={comingFromRight}>
-                {causes.map((c, i) => i === activeIdx && (
-                  <motion.div
-                    key={c.name}
-                    className="scard-scene"
-                    custom={comingFromRight}
-                    initial="hidden"
-                    animate="visible"
-                    exit="exit"
-                    variants={{
-                      hidden: (fromRight) => ({
-                        clipPath: fromRight
-                          ? 'circle(0% at 110% 50%)'   // arrive from right → expand circle starting at right edge
-                          : 'circle(0% at -10% 50%)',  // arrive from left
-                        x: fromRight ? 60 : -60,
-                        opacity: 0,
-                      }),
-                      visible: {
-                        clipPath: 'circle(150% at 50% 50%)',
-                        x: 0,
-                        opacity: 1,
-                        transition: {
-                          clipPath: { duration: 0.72, ease: [0.16, 1, 0.3, 1] },
-                          x: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
-                          opacity: { duration: 0.25 },
-                        },
-                      },
-                      exit: (fromRight) => ({
-                        clipPath: fromRight
-                          ? 'circle(0% at -10% 50%)'
-                          : 'circle(0% at 110% 50%)',
-                        x: fromRight ? -40 : 40,
-                        opacity: 0,
-                        transition: {
-                          clipPath: { duration: 0.42, ease: [0.7, 0, 1, 0.4] },
-                          x: { duration: 0.38, ease: 'easeIn' },
-                          opacity: { duration: 0.2 },
-                        },
-                      }),
-                    }}
-                  >
-                    {/* Glow ring */}
-                    <motion.div
-                      className="scard-glow-ring"
-                      style={{ borderColor: CAUSE_COLORS[i % CAUSE_COLORS.length] }}
-                      animate={{ scale: [1, 1.04, 1], opacity: [0.4, 0.7, 0.4] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-
-                    {/* Clickable card */}
-                    <motion.div
-                      className="scard scard-clickable"
-                      onClick={() => openModal(i)}
-                      whileHover={{ scale: 1.025, y: -4 }}
-                      whileTap={{ scale: 0.98 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                    >
-                      {/* Image */}
-                      <div className="scard-img-wrap">
-                        <motion.img
-                          src={c.img}
-                          alt={c.name}
-                          className="scard-img"
-                          loading="lazy"
-                          initial={{ scale: 1.1 }}
-                          animate={{ scale: 1 }}
-                          transition={{ duration: 0.8, ease: 'easeOut' }}
-                        />
-                        <div className="scard-img-overlay" style={{ background: `linear-gradient(to top, ${CAUSE_COLORS[i % CAUSE_COLORS.length]}cc 0%, transparent 55%)` }} />
-                        <motion.div
-                          className="scard-icon-badge"
-                          initial={{ y: 20, opacity: 0 }}
-                          animate={{ y: 0, opacity: 1 }}
-                          transition={{ delay: 0.35, duration: 0.5 }}
-                          style={{ background: CAUSE_COLORS[i % CAUSE_COLORS.length] }}
-                        >
-                          {c.icon}
-                        </motion.div>
-                        <motion.div
-                          className="scard-scanline"
-                          animate={{ top: ['-10%', '110%'] }}
-                          transition={{ duration: 1.8, delay: 0.1, ease: 'linear' }}
-                        />
-                        {/* "Click to expand" hint */}
-                        <motion.div
-                          className="scard-expand-hint"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          transition={{ delay: 0.7 }}
-                        >
-                          <svg viewBox="0 0 24 24" fill="none" width="14" height="14">
-                            <path d="M15 3h6m0 0v6m0-6l-7 7M9 21H3m0 0v-6m0 6l7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                          Click to expand
-                        </motion.div>
-                      </div>
-
-                      {/* Text */}
-                      <div className="scard-body">
-                        <motion.div className="scard-num" style={{ color: CAUSE_COLORS[i % CAUSE_COLORS.length] }}
-                          initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.38 }}>
-                          {String(i + 1).padStart(2, '0')}
-                        </motion.div>
-                        <motion.h3 className="scard-name"
-                          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.42, duration: 0.5 }}>
-                          {c.name}
-                        </motion.h3>
-                        <motion.div className="scard-divider" style={{ background: CAUSE_COLORS[i % CAUSE_COLORS.length] }}
-                          initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.48, duration: 0.5, ease: 'easeOut' }} />
-                        <motion.p className="scard-desc"
-                          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.52, duration: 0.5 }}>
-                          {c.desc}
-                        </motion.p>
-                        <div className="scard-progress-wrap">
-                          <motion.div className="scard-progress-fill" style={{ background: CAUSE_COLORS[i % CAUSE_COLORS.length] }}
-                            initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 0.58, duration: 0.8, ease: [0.16, 1, 0.3, 1] }} />
-                        </div>
-                        <div className="scard-progress-label">
-                          <span style={{ color: CAUSE_COLORS[i % CAUSE_COLORS.length] }}>Pillar {i + 1}</span>
-                          <span>of {TOTAL}</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
-
-          <motion.p className="spotlight-hint" style={{ opacity: useTransform(smooth, [0, 0.08], [1, 0]) }}>
-            ↓ Scroll or click a pillar to explore
-          </motion.p>
+          </motion.div>
         </div>
       </section>
 
-      {/* Full card modal */}
       <AnimatePresence>
         {modalIdx !== null && (
           <CauseModal

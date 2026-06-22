@@ -8,21 +8,21 @@ import { useParallax } from '../../hooks/useTilt3D';
 import { useScroll, useTransform, motion, useSpring } from 'framer-motion';
 import './About.css';
 
-/* ── Real photo URLs (Unsplash) ───────────────────────────── */
+/* ── Real photo URLs ────────────────────────────────────────── */
 const PHOTOS = {
   founder: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&q=80',
-  story:   'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=700&h=500&fit=crop&q=80',
+  story:   '/images/child-welfare.png',
   team: [
     'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=280&h=280&fit=crop&q=80',
     'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=280&h=280&fit=crop&q=80',
     'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=280&h=280&fit=crop&q=80',
   ],
   timeline: [
-    'https://images.unsplash.com/photo-1497486751825-1233686d5d80?w=700&h=900&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700&h=900&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=700&h=900&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=700&h=900&fit=crop&q=80',
-    'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=700&h=900&fit=crop&q=80',
+    '/images/education.png',          // 2018 — Founded: reading circle, first 12 children
+    '/images/rural-development.png',  // 2019 — First Village Program: village community work
+    '/images/women-empowerment.png',  // 2021 — 5,000 Beneficiaries: Shakti Abhiyan women program
+    '/images/healthcare.png',         // 2024 — Gujarat Expansion: health camps across 8 districts
+    '/images/environment.png',        // 2026 — Future Vision: clean energy & sustainable growth
   ],
 };
 
@@ -90,10 +90,10 @@ const awards = [
 
 /* ── 2030 Goals ────────────────────────────────────────────── */
 const goals2030 = [
-  { year: '2027', target: '15 Districts', desc: 'Reach all 15 underserved districts of Gujarat with integrated programs.', img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=320&h=180&fit=crop&q=80', color: 'var(--blue)' },
-  { year: '2028', target: 'Digital Academy', desc: 'Launch Banshri Digital Academy — free online learning for 10,000 rural students.', img: 'https://images.unsplash.com/photo-1588072432836-e10032774350?w=320&h=180&fit=crop&q=80', color: 'var(--teal)' },
-  { year: '2029', target: '50 Health Hubs', desc: 'Establish 50 permanent community health hubs with telemedicine access.', img: 'https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=320&h=180&fit=crop&q=80', color: 'var(--green)' },
-  { year: '2030', target: '2 Lakh Trees', desc: 'Plant 2,00,000 trees and restore 25 watersheds across North and Central Gujarat.', img: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=320&h=180&fit=crop&q=80', color: '#a855f7' },
+  { year: '2027', target: '15 Districts', desc: 'Reach all 15 underserved districts of Gujarat with integrated programs.', img: '/images/rural-development.png', color: 'var(--blue)' },
+  { year: '2028', target: 'Digital Academy', desc: 'Launch Banshri Digital Academy — free online learning for 10,000 rural students.', img: '/images/education.png', color: 'var(--teal)' },
+  { year: '2029', target: '50 Health Hubs', desc: 'Establish 50 permanent community health hubs with telemedicine access.', img: '/images/healthcare.png', color: 'var(--green)' },
+  { year: '2030', target: '2 Lakh Trees', desc: 'Plant 2,00,000 trees and restore 25 watersheds across North and Central Gujarat.', img: '/images/environment.png', color: '#a855f7' },
 ];
 
 /* ── Donation breakdown ────────────────────────────────────── */

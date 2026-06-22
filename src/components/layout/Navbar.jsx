@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
 import banshriLogo from '../../assets/images/banshri-logo.png';
 
 const mainLinks = [
@@ -15,70 +15,136 @@ const mainLinks = [
 ];
 
 const moreLinks = [
-  { to: '/team', label: '👥 Our Team' },
-  { to: '/annual-reports', label: '📄 Annual Reports' },
-  { to: '/csr', label: '🏢 CSR Partnership' },
-  { to: '/transparency', label: '📊 Transparency' },
-  { to: '/media', label: '📰 Media Coverage' },
-  { to: '/careers', label: '💼 Careers' },
+  { to: '/team', label: 'Our Team', icon: '👥' },
+  { to: '/annual-reports', label: 'Annual Reports', icon: '📄' },
+  { to: '/csr', label: 'CSR Partnership', icon: '🏢' },
+  { to: '/transparency', label: 'Transparency', icon: '📊' },
+  { to: '/media', label: 'Media Coverage', icon: '📰' },
+  { to: '/careers', label: 'Careers', icon: '💼' },
 ];
 
 export default function Navbar() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const moreRef = useRef(null);
+  const location = useLocation();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+    setMobileMoreOpen(false);
+  }, [location]);
+
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  // Shadow on scroll
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => { if (moreRef.current && !moreRef.current.contains(e.target)) setMoreOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const navCls = `nb-root${scrolled ? ' nb-scrolled' : ''}${menuOpen ? ' nb-open' : ''}`;
 
   return (
-    <nav className="navbar">
-      <NavLink to="/" className="navbar-brand" style={{ display: 'flex', alignItems: 'center', padding: '0.25rem 0' }}>
-        <img
-          src={banshriLogo}
-          alt="Banshri Charitable Trust"
-          style={{ height: '152px', width: 'auto', objectFit: 'contain', filter: 'brightness(1.05) drop-shadow(0 2px 8px rgba(0,91,154,0.18))' }}
-        />
-      </NavLink>
+    <>
+      <nav className={navCls}>
+        {/* Brand */}
+        <NavLink to="/" className="nb-brand" onClick={() => setMenuOpen(false)}>
+          <img src={banshriLogo} alt="Banshri Charitable Trust" className="nb-logo" />
+        </NavLink>
 
-      {/* Desktop Links */}
-      <div className="navbar-links" style={{ display: 'flex', alignItems: 'center', gap: '0.1rem' }}>
-        {mainLinks.map(l => (
-          <NavLink key={l.to} to={l.to} end={l.to === '/'} className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')}>{l.label}</NavLink>
-        ))}
-
-        {/* More Dropdown */}
-        <div style={{ position: 'relative' }} onMouseEnter={() => setMoreOpen(true)} onMouseLeave={() => setMoreOpen(false)}>
-          <button className="nav-link" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.75)', fontWeight: 500, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
-            More ▾
-          </button>
-          {moreOpen && (
-            <div style={{ position: 'absolute', top: '100%', right: 0, background: 'var(--dark-blue)', borderRadius: 12, padding: '0.5rem', minWidth: 200, boxShadow: '0 8px 30px rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', zIndex: 200 }}>
-              {moreLinks.map(l => (
-                <NavLink key={l.to} to={l.to} className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')} style={{ display: 'block', padding: '0.5rem 0.9rem', fontSize: '0.82rem' }}>
-                  {l.label}
-                </NavLink>
-              ))}
-            </div>
-          )}
-        </div>
-
-      </div>
-              <NavLink to="/donate" className="nav-link nav-donate">❤️ Donate</NavLink>
-
-
-      {/* Mobile Hamburger */}
-      <button onClick={() => setMenuOpen(!menuOpen)} style={{ display: 'none', background: 'none', border: 'none', color: 'white', fontSize: '1.4rem', cursor: 'pointer' }} className="mobile-menu-btn">
-        {menuOpen ? '✕' : '☰'}
-      </button>
-
-      {/* Mobile Drawer */}
-      {menuOpen && (
-        <div style={{ position: 'fixed', top: 70, left: 0, right: 0, bottom: 0, background: 'var(--dark-blue)', zIndex: 999, overflowY: 'auto', padding: '1rem' }}>
-          {[...mainLinks, ...moreLinks].map(l => (
-            <NavLink key={l.to} to={l.to} onClick={() => setMenuOpen(false)} className={({ isActive }) => 'nav-link' + (isActive ? ' active' : '')} style={{ display: 'block', padding: '0.8rem 1rem', fontSize: '0.95rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        {/* Desktop links */}
+        <div className="nb-links">
+          {mainLinks.map(l => (
+            <NavLink key={l.to} to={l.to} end={l.to === '/'} className={({ isActive }) => 'nb-link' + (isActive ? ' nb-active' : '')}>
               {l.label}
             </NavLink>
           ))}
-          <NavLink to="/donate" onClick={() => setMenuOpen(false)} className="nav-link nav-donate" style={{ display: 'block', margin: '1rem 0', textAlign: 'center' }}>❤️ Donate</NavLink>
+
+          {/* More dropdown */}
+          <div className="nb-more-wrap" ref={moreRef} onMouseEnter={() => setMoreOpen(true)} onMouseLeave={() => setMoreOpen(false)}>
+            <button className={`nb-link nb-more-btn${moreOpen ? ' nb-active' : ''}`} aria-expanded={moreOpen}>
+              More <span className={`nb-chevron${moreOpen ? ' nb-chevron-open' : ''}`}>▾</span>
+            </button>
+            {/* Invisible bridge covers the gap between button and dropdown */}
+            <div className="nb-dropdown-bridge" aria-hidden="true" />
+            <div className={`nb-dropdown${moreOpen ? ' nb-dropdown-open' : ''}`} role="menu">
+              <div className="nb-drop-panel">
+                {moreLinks.map(l => (
+                  <NavLink key={l.to} to={l.to} role="menuitem" className={({ isActive }) => 'nb-drop-item' + (isActive ? ' nb-active' : '')}>
+                    <span className="nb-drop-icon">{l.icon}</span> {l.label}
+                  </NavLink>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      )}
-    </nav>
+
+        {/* Desktop donate */}
+        <NavLink to="/donate" className="nb-donate nb-donate-desk">❤️ Donate</NavLink>
+
+        {/* Hamburger */}
+        <button
+          className={`nb-ham${menuOpen ? ' nb-ham-open' : ''}`}
+          onClick={() => setMenuOpen(v => !v)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+        >
+          <span /><span /><span />
+        </button>
+      </nav>
+
+      {/* Mobile drawer */}
+      <div className={`nb-drawer${menuOpen ? ' nb-drawer-open' : ''}`} aria-hidden={!menuOpen}>
+        <div className="nb-drawer-inner">
+          {/* Main links */}
+          <div className="nb-mob-section">
+            {mainLinks.map(l => (
+              <NavLink key={l.to} to={l.to} end={l.to === '/'} className={({ isActive }) => 'nb-mob-link' + (isActive ? ' nb-mob-active' : '')}>
+                {l.label}
+              </NavLink>
+            ))}
+          </div>
+
+          {/* More accordion */}
+          <div className="nb-mob-section">
+            <button className="nb-mob-more-toggle" onClick={() => setMobileMoreOpen(v => !v)} aria-expanded={mobileMoreOpen}>
+              <span>More</span>
+              <span className={`nb-chevron${mobileMoreOpen ? ' nb-chevron-open' : ''}`}>▾</span>
+            </button>
+            <div className={`nb-mob-more${mobileMoreOpen ? ' nb-mob-more-open' : ''}`}>
+              {moreLinks.map(l => (
+                <NavLink key={l.to} to={l.to} className={({ isActive }) => 'nb-mob-link nb-mob-sub' + (isActive ? ' nb-mob-active' : '')}>
+                  <span>{l.icon}</span> {l.label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+
+          {/* Donate CTA */}
+          <NavLink to="/donate" className="nb-donate nb-donate-mob">❤️ Donate Now</NavLink>
+
+          {/* Trust badges */}
+          <p className="nb-mob-badge">80G · 12(A) · FCRA · DARPAN Registered</p>
+        </div>
+      </div>
+
+      {/* Backdrop */}
+      {menuOpen && <div className="nb-backdrop" onClick={() => setMenuOpen(false)} aria-hidden="true" />}
+    </>
   );
 }
